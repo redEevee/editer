@@ -6,9 +6,9 @@ export default function UploadZone({ onUpload }) {
   const inputRef = useRef(null)
 
   const handleFile = useCallback((file) => {
-    if (file && file.type === 'application/pdf') {
-      setSelectedFile(file)
-    }
+    if (!file) return
+    const valid = file.type === 'application/pdf' || file.name.endsWith('.md') || file.type === 'text/markdown' || file.type === 'text/plain'
+    if (valid) setSelectedFile(file)
   }, [])
 
   const handleDragOver = useCallback((e) => {
@@ -98,9 +98,9 @@ export default function UploadZone({ onUpload }) {
           </div>
 
           <div className="text-center">
-            <h2 className="text-white text-xl font-semibold mb-2">Upload your storyboard PDF</h2>
+            <h2 className="text-white text-xl font-semibold mb-2">스토리보드 업로드</h2>
             <p style={{ color: '#a0a0a0' }} className="text-sm leading-relaxed">
-              We'll analyze it and generate a 9-post Instagram grid
+              PDF 또는 Markdown(.md) 파일을 올리면<br/>AI가 9장 인스타 피드를 자동 생성해줍니다
             </p>
           </div>
 
@@ -114,14 +114,14 @@ export default function UploadZone({ onUpload }) {
             </svg>
             {selectedFile ? selectedFile.name : 'Drag & drop or click to browse'}
           </div>
-          <p style={{ color: '#555' }} className="text-xs">PDF files only</p>
+          <p style={{ color: '#555' }} className="text-xs">PDF · Markdown(.md) 지원</p>
         </div>
       </div>
 
       <input
         ref={inputRef}
         type="file"
-        accept=".pdf"
+        accept=".pdf,.md,text/markdown,text/plain"
         className="hidden"
         onChange={handleInputChange}
       />
