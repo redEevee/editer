@@ -1,8 +1,11 @@
 import { useState, useRef, useCallback } from 'react'
 
+const COUNT_OPTIONS = [1, 3, 6, 9, 12]
+
 export default function UploadZone({ onUpload }) {
   const [selectedFile, setSelectedFile] = useState(null)
   const [isDragging, setIsDragging] = useState(false)
+  const [postCount, setPostCount] = useState(9)
   const inputRef = useRef(null)
 
   const handleFile = useCallback((file) => {
@@ -33,8 +36,8 @@ export default function UploadZone({ onUpload }) {
   }, [handleFile])
 
   const handleGenerate = useCallback(() => {
-    if (selectedFile) onUpload(selectedFile)
-  }, [selectedFile, onUpload])
+    if (selectedFile) onUpload(selectedFile, postCount)
+  }, [selectedFile, postCount, onUpload])
 
   return (
     <div className="min-h-screen flex flex-col items-center justify-center px-4"
@@ -127,7 +130,7 @@ export default function UploadZone({ onUpload }) {
       />
 
       {selectedFile && (
-        <div className="mt-6 flex flex-col items-center gap-3">
+        <div className="mt-6 flex flex-col items-center gap-4 w-full max-w-lg">
           <div className="flex items-center gap-2" style={{ color: '#a0a0a0' }}>
             <svg width="16" height="16" fill="none" viewBox="0 0 24 24">
               <path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8l-6-6z" stroke="#e1306c" strokeWidth="1.5" fill="none"/>
@@ -135,15 +138,38 @@ export default function UploadZone({ onUpload }) {
             </svg>
             <span className="text-sm">{selectedFile.name}</span>
           </div>
+
+          {/* 장수 선택 */}
+          <div className="w-full rounded-xl p-4" style={{ background: '#1a1a1a', border: '1px solid #2a2a2a' }}>
+            <p className="text-xs mb-3 text-center" style={{ color: '#a0a0a0' }}>피드 장수 선택</p>
+            <div className="flex justify-center gap-2">
+              {COUNT_OPTIONS.map(n => (
+                <button
+                  key={n}
+                  onClick={() => setPostCount(n)}
+                  className="w-12 h-12 rounded-xl text-sm font-semibold transition-all duration-200"
+                  style={{
+                    background: postCount === n ? 'linear-gradient(135deg, #e6683c, #dc2743, #cc2366)' : '#2a2a2a',
+                    color: postCount === n ? '#fff' : '#a0a0a0',
+                    border: postCount === n ? 'none' : '1px solid #3a3a3a',
+                    transform: postCount === n ? 'scale(1.08)' : 'scale(1)'
+                  }}
+                >
+                  {n}
+                </button>
+              ))}
+            </div>
+          </div>
+
           <button
             onClick={handleGenerate}
-            className="px-8 py-3 rounded-xl font-semibold text-white transition-all duration-200 hover:opacity-90 active:scale-95"
+            className="w-full py-3 rounded-xl font-semibold text-white transition-all duration-200 hover:opacity-90 active:scale-95"
             style={{
               background: 'linear-gradient(135deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888)',
               boxShadow: '0 4px 20px rgba(225,48,108,0.4)'
             }}
           >
-            Generate Feed
+            피드 {postCount}장 생성하기
           </button>
         </div>
       )}

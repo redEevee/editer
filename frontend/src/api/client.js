@@ -10,9 +10,10 @@ client.interceptors.request.use(config => {
   return config
 })
 
-export async function analyzeStoryboard(file) {
+export async function analyzeStoryboard(file, count = 9) {
   const formData = new FormData()
   formData.append('pdf', file)
+  formData.append('count', String(count))
   const response = await client.post('/api/analyze', formData, {
     headers: { 'Content-Type': 'multipart/form-data' }
   })

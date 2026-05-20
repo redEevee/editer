@@ -26,14 +26,14 @@ export function useGenerator() {
     )
   }, [])
 
-  const uploadAndAnalyze = useCallback(async (file) => {
+  const uploadAndAnalyze = useCallback(async (file, count = 9) => {
     setError(null)
     setStatus('analyzing')
     setPosts([])
 
     let analyzedPosts
     try {
-      const data = await analyzeStoryboard(file)
+      const data = await analyzeStoryboard(file, count)
       analyzedPosts = (data.posts || []).map(makePostDefaults)
       setPosts(analyzedPosts)
     } catch (err) {
